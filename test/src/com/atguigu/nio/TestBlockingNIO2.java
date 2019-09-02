@@ -27,7 +27,14 @@ public class TestBlockingNIO2 {
 			sChannel.write(buf);
 			buf.clear();
 		}
-		
+
+		//如果不加这一行代码则程序一直运行不停止,因为Server阻塞了
+		//加里这行代码相当于和服务端说了,我已经做完了，你可以做了
+//		调用Socket.shutdownOutput()后，禁用此套接字的输出流，
+//		对于 TCP 套接字，任何以前写入的数据都将被发送，
+//		并且后跟 TCP 的正常连接终止序列（即-1），之后，从另一端TCP套接字的输入流中读取数据时，
+//		如果到达输入流末尾而不再有数据可用，则返回 -1。
+		//http://www.imooc.com/wenda/detail/325869
 		sChannel.shutdownOutput();
 		
 		//接收服务端的反馈
@@ -37,7 +44,7 @@ public class TestBlockingNIO2 {
 			System.out.println(new String(buf.array(), 0, len));
 			buf.clear();
 		}
-		
+
 		inChannel.close();
 		sChannel.close();
 	}
@@ -60,12 +67,12 @@ public class TestBlockingNIO2 {
 			outChannel.write(buf);
 			buf.clear();
 		}
-		
+
 		//发送反馈给客户端
 		buf.put("服务端接收数据成功".getBytes());
 		buf.flip();
 		sChannel.write(buf);
-		
+		//sChannel.shutdownOutput();
 		sChannel.close();
 		outChannel.close();
 		ssChannel.close();
