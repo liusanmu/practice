@@ -1,5 +1,7 @@
 package arithmetic;
 
+import org.junit.Test;
+
 /**
  * @Description: 顺序查找
  * @author: liusen
@@ -57,9 +59,75 @@ public class Search {
 			index--;
 		}
 		return index;
+
+
 		
-		
-		
+	}
+
+
+	/**
+	 * mid = (min + max) / 2;
+	 * 这句代码在 min 和 max 很大的时候，会出现溢出的情况，从而导致数组访问出错。
+	 */
+	public static int binary1(int[] arr, int data) {
+		int min = 0;
+		int max = arr.length - 1;
+		int mid;
+		while (min <= max) {
+			mid = (min + max) / 2;
+			if (arr[mid] > data) {
+				max = mid - 1;
+			} else if (arr[mid] < data) {
+				min = mid + 1;
+			} else {
+				return mid;
+			}
+		}
+		return -1;
+	}
+
+	@Test
+	public void test() {
+		int[] arr = {1,2,3,4,5,6,7,8,9,11};
+		int index = binary2(arr, 11);
+		System.out.println(index);
+	}
+	public static int binary2(int[] arr, int data) {
+		int min = 0;
+		int max = arr.length - 1;
+		int mid;
+		while (min <= max) {
+			// 防止溢出
+			//mid = (min + max) / 2;
+			mid =  min + (max - min) / 2;
+			if (arr[mid] > data) {
+				max = mid - 1;
+			} else if (arr[mid] < data) {
+				min = mid + 1;
+			} else {
+				return mid;
+			}
+		}
+		return -1;
+	}
+
+
+	public static int binary3(int[] arr, int data) {
+		int min = 0;
+		int max = arr.length - 1;
+		int mid;
+		while (min <= max) {
+			// 无符号位运算符的优先级较低，先括起来
+			mid =  min + ((max - min) >>> 1);
+			if (arr[mid] > data) {
+				max = mid - 1;
+			} else if (arr[mid] < data) {
+				min = mid + 1;
+			} else {
+				return mid;
+			}
+		}
+		return -1;
 	}
 
 }
